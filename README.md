@@ -65,3 +65,4 @@ To generate shorts on any Mac without copying this repository:
 
 ## 📄 License
 MIT License. 100% Free and open-source.
+

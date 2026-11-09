@@ -1,0 +1,1613 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Claude & Human Shorts Studio Pro - 3D Models</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@800;900&family=Plus+Jakarta+Sans:wght@500;700;800&family=JetBrains+Mono:wght@600&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --bg: #07090e;
+      --card-bg: #111520;
+      --border: #1f2738;
+      --claude-accent: #d97706;
+      --claude-glow: rgba(217, 119, 6, 0.4);
+      --human-accent: #3b82f6;
+      --human-glow: rgba(59, 130, 246, 0.4);
+      --text: #f3f4f6;
+      --text-dim: #94a3b8;
+      --yellow-highlight: #facc15;
+    }
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    body {
+      background: var(--bg);
+      color: var(--text);
+      font-family: 'Plus Jakarta Sans', sans-serif;
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      overflow-x: hidden;
+    }
+    header {
+      padding: 14px 28px;
+      background: #0d1017;
+      border-bottom: 1px solid var(--border);
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+    .brand {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      font-weight: 800;
+      font-size: 1.15rem;
+    }
+    .badge {
+      background: linear-gradient(135deg, #d97706, #ea580c);
+      color: white;
+      padding: 4px 10px;
+      border-radius: 999px;
+      font-size: 0.75rem;
+      font-weight: 700;
+    }
+    .container {
+      display: flex;
+      flex: 1;
+      gap: 24px;
+      padding: 20px 28px;
+      max-width: 1600px;
+      margin: 0 auto;
+      width: 100%;
+    }
+    .panel {
+      background: var(--card-bg);
+      border: 1px solid var(--border);
+      border-radius: 16px;
+      padding: 20px;
+      display: flex;
+      flex-direction: column;
+      gap: 14px;
+    }
+    .editor-panel {
+      flex: 1.35;
+      min-width: 420px;
+    }
+    .preview-panel {
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 14px;
+    }
+    h2 {
+      font-size: 1.05rem;
+      font-weight: 800;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      color: #fff;
+    }
+    label {
+      font-size: 0.78rem;
+      font-weight: 700;
+      color: var(--text-dim);
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+    }
+    select, input, textarea {
+      width: 100%;
+      background: #080b11;
+      border: 1px solid var(--border);
+      border-radius: 10px;
+      color: #fff;
+      padding: 10px 14px;
+      font-family: inherit;
+      font-size: 0.92rem;
+      outline: none;
+      transition: border-color 0.2s, box-shadow 0.2s;
+    }
+    select:focus, input:focus, textarea:focus {
+      border-color: var(--claude-accent);
+      box-shadow: 0 0 0 2px var(--claude-glow);
+    }
+    textarea {
+      height: 200px;
+      resize: vertical;
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 0.86rem;
+      line-height: 1.55;
+    }
+    .templates-bar {
+      display: flex;
+      gap: 6px;
+      flex-wrap: wrap;
+    }
+    .btn-chip {
+      background: #192030;
+      border: 1px solid #27334d;
+      color: #cbd5e1;
+      padding: 5px 10px;
+      border-radius: 8px;
+      font-size: 0.78rem;
+      cursor: pointer;
+      font-weight: 600;
+      transition: all 0.2s;
+    }
+    .btn-chip:hover {
+      background: #232d45;
+      border-color: #3b4b6f;
+      color: #fff;
+    }
+    .controls {
+      display: flex;
+      gap: 12px;
+      margin-top: 4px;
+    }
+    .btn {
+      flex: 1;
+      padding: 14px 18px;
+      border: none;
+      border-radius: 12px;
+      font-weight: 800;
+      font-size: 0.95rem;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+      transition: transform 0.15s, filter 0.2s;
+    }
+    .btn:active { transform: scale(0.98); }
+    .btn-primary {
+      background: linear-gradient(135deg, #d97706, #ea580c);
+      color: #fff;
+      box-shadow: 0 8px 20px var(--claude-glow);
+    }
+    .btn-primary:hover { filter: brightness(1.1); }
+    .btn-secondary {
+      background: #1e2638;
+      color: #e2e8f0;
+      border: 1px solid #2b364e;
+    }
+    .btn-secondary:hover { background: #28334b; }
+    .btn-record {
+      background: linear-gradient(135deg, #ef4444, #dc2626);
+      color: white;
+    }
+
+    /* Phone Mockup Canvas Wrapper */
+    .phone-wrapper {
+      position: relative;
+      width: 360px;
+      height: 640px;
+      border-radius: 36px;
+      padding: 10px;
+      background: #000;
+      box-shadow: 0 20px 60px rgba(0, 0, 0, 0.9), 0 0 0 2px #262c3d;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+    }
+    .phone-screen {
+      position: relative;
+      width: 100%;
+      height: 100%;
+      border-radius: 28px;
+      overflow: hidden;
+      background: #05070a;
+    }
+    canvas {
+      width: 100%;
+      height: 100%;
+      display: block;
+    }
+    .recording-badge {
+      display: none;
+      position: absolute;
+      top: 20px;
+      right: 20px;
+      background: rgba(220, 38, 38, 0.95);
+      color: white;
+      padding: 5px 12px;
+      border-radius: 999px;
+      font-size: 0.75rem;
+      font-weight: 800;
+      letter-spacing: 0.5px;
+      animation: pulse 1s infinite;
+      z-index: 10;
+    }
+    @keyframes pulse {
+      0%, 100% { opacity: 1; }
+      50% { opacity: 0.4; }
+    }
+    .status-bar {
+      font-size: 0.85rem;
+      color: #38bdf8;
+      font-weight: 600;
+      text-align: center;
+      min-height: 22px;
+      background: #0d121c;
+      padding: 6px 12px;
+      border-radius: 8px;
+      border: 1px solid #1e293b;
+    }
+    .layout-toggle {
+      display: flex;
+      gap: 8px;
+    }
+    .layout-btn {
+      flex: 1;
+      padding: 8px 12px;
+      background: #0d111a;
+      border: 1px solid #1f2738;
+      color: #94a3b8;
+      border-radius: 8px;
+      cursor: pointer;
+      font-size: 0.82rem;
+      font-weight: 700;
+    }
+    .layout-btn.active {
+      background: #232c40;
+      border-color: #3b82f6;
+      color: #fff;
+    }
+    .feature-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 12px;
+    }
+    .ai-generator-box {
+      background: #0a0d16;
+      border: 1px solid #232c42;
+      border-radius: 12px;
+      padding: 12px;
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+    }
+  </style>
+</head>
+<body>
+  <header>
+    <div class="brand">
+      <span>🎬</span>
+      <span>Claude & Human 3D Shorts Studio</span>
+      <span class="badge">Pro Edition</span>
+    </div>
+    <div style="font-size: 0.85rem; color: #94a3b8;">
+      Full 3D Character Models • Bulletproof Audio & Subtitle Engine • 1080×1920 MP4
+    </div>
+  </header>
+
+  <div class="container">
+    <!-- Left: Script & Settings -->
+    <div class="panel editor-panel">
+      <!-- One-click AI Story Generator -->
+      <div class="ai-generator-box">
+        <label>⚡ Instant Story Generator (Type any topic)</label>
+        <div style="display: flex; gap: 8px;">
+          <input type="text" id="topicInput" placeholder="e.g. The $1 Bank Heist, Simulation glitch, Disappearing in Japan..." style="flex: 1;">
+          <button class="btn btn-primary" style="flex: initial; padding: 0 16px; font-size: 0.85rem;" onclick="generateScriptFromTopic()">
+            ✨ Generate
+          </button>
+        </div>
+      </div>
+
+      <div>
+        <label>Popular Viral Stories</label>
+        <div class="templates-bar" style="margin-top: 6px;">
+          <button class="btn-chip" onclick="loadTemplate('bank')">🏦 $1 Bank Loophole</button>
+          <button class="btn-chip" onclick="loadTemplate('pudding')">✈️ 1.25M Miles Pudding Guy</button>
+          <button class="btn-chip" onclick="loadTemplate('eiffel')">🗼 Sold Eiffel Tower Twice</button>
+          <button class="btn-chip" onclick="loadTemplate('matrix')">🌌 Reality Render Glitch</button>
+          <button class="btn-chip" onclick="loadTemplate('bullet_ant')">🐜 Bullet Ant Sting</button>
+        </div>
+      </div>
+
+      <div>
+        <label>Script Editor (Use <code>[Human]</code> and <code>[Claude]</code>)</label>
+        <textarea id="scriptInput" spellcheck="false"></textarea>
+      </div>
+
+      <div class="feature-grid">
+        <div>
+          <label>Human Character Voice</label>
+          <select id="humanVoiceSelect" style="margin-top: 4px;"></select>
+        </div>
+        <div>
+          <label>Claude AI Voice</label>
+          <select id="claudeVoiceSelect" style="margin-top: 4px;"></select>
+        </div>
+      </div>
+
+      <div class="feature-grid">
+        <div>
+          <label>Video Stage Layout</label>
+          <div class="layout-toggle" style="margin-top: 4px;">
+            <button class="layout-btn active" id="layoutSplit" onclick="setLayout('split')">📱 Podcast Duet Split</button>
+            <button class="layout-btn" id="layoutStage" onclick="setLayout('stage')">🎭 Facing 3D Arena</button>
+          </div>
+        </div>
+        <div>
+          <label>Speech Pacing / Speed</label>
+          <select id="speechRateSelect" style="margin-top: 4px;">
+            <option value="1.0">1.0x (Standard)</option>
+            <option value="1.15" selected>1.15x (Viral Fast Paced)</option>
+            <option value="1.25">1.25x (Hyperspeed)</option>
+          </select>
+        </div>
+      </div>
+
+      <div class="feature-grid">
+        <div>
+          <label>Background Beat / Soundtrack</label>
+          <select id="bgmStyleSelect" style="margin-top: 4px;" onchange="changeBGMStyle()">
+            <option value="drone">🎵 Dark Tension Drone (Mystery)</option>
+            <option value="lofi">🎹 Lofi Chill Chords</option>
+            <option value="trap">🥁 Cyber Synth Bass</option>
+            <option value="none">🔇 No Music (Voice Only)</option>
+          </select>
+        </div>
+        <div>
+          <label>Custom Story Image / Proof</label>
+          <input type="file" id="imageUpload" accept="image/*" style="display:none;" onchange="handleImageUpload(event)">
+          <button class="btn-chip" style="width: 100%; margin-top: 4px; padding: 10px;" onclick="document.getElementById('imageUpload').click()" id="imageUploadLabel">
+            🖼️ Upload Custom B-Roll Image
+          </button>
+        </div>
+      </div>
+
+      <div class="controls">
+        <button class="btn btn-secondary" id="previewBtn" onclick="togglePlay()">
+          <span>▶️</span> Preview Video
+        </button>
+        <button class="btn btn-primary btn-record" id="recordBtn" onclick="startExport()">
+          <span>🔴</span> Export Full HD 9:16 Video
+        </button>
+      </div>
+      <div class="status-bar" id="statusText">🟢 Ready! Click "Preview Video" to start.</div>
+    </div>
+
+    <!-- Right: Mobile Shorts Mockup -->
+    <div class="panel preview-panel">
+      <h2><span>📱</span> Live 9:16 Shorts Preview (1080 × 1920)</h2>
+      
+      <div class="phone-wrapper" id="dropZone">
+        <div class="recording-badge" id="recordingIndicator">● RECORDING HD 60FPS</div>
+        <div class="phone-screen">
+          <canvas id="videoCanvas" width="1080" height="1920"></canvas>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    // ==========================================
+    // ROBUST CANVAS POLYFILL FOR roundRect
+    // ==========================================
+    if (!CanvasRenderingContext2D.prototype.roundRect) {
+      CanvasRenderingContext2D.prototype.roundRect = function(x, y, w, h, r) {
+        if (typeof r === 'number') r = [r, r, r, r];
+        else if (!Array.isArray(r)) r = [0, 0, 0, 0];
+        const [tl, tr, br, bl] = r;
+        this.beginPath();
+        this.moveTo(x + tl, y);
+        this.lineTo(x + w - tr, y);
+        this.quadraticCurveTo(x + w, y, x + w, y + tr);
+        this.lineTo(x + w, y + h - br);
+        this.quadraticCurveTo(x + w, y + h, x + w - br, y + h);
+        this.lineTo(x + bl, y + h);
+        this.quadraticCurveTo(x, y + h, x, y + h - bl);
+        this.lineTo(x, y + tl);
+        this.quadraticCurveTo(x, y, x + tl, y);
+        this.closePath();
+        return this;
+      };
+    }
+
+    const TEMPLATES = {
+      bank: `[Human]
+Claude, what is the craziest untold story about The Secret Gold Vault of Fort Knox?
+
+[Claude]
+Most people think it is an urban legend, but official declassified archives tell a terrifyingly real story.
+
+[Human]
+Wait, what actually happened?!
+
+[Claude]
+In the middle of the operation, an unexpected flaw in the protocol was exploited, causing chaos that officials tried to cover up for years.
+
+[Human]
+How did anyone even figure out the loophole?
+
+[Claude]
+By the time authorities stepped in, over tens of millions of dollars had vanished without leaving a single trace!
+
+[Human]
+That might be the smartest maneuver in history!`,
+
+      pudding: `[Human]
+Claude, what is the craziest frequent flyer loophole that anyone has ever pulled off?
+
+[Claude]
+In 1999, a civil engineer named David Phillips cracked the airline miles code using chocolate pudding.
+
+[Human]
+Wait... chocolate pudding got him free flights?!
+
+[Claude]
+Every individual twenty-five cent Healthy Choice pudding cup had a barcode worth one hundred free airline miles!
+
+[Human]
+So what did he do?!
+
+[Claude]
+He spent three thousand dollars buying twelve thousand pudding cups, donated the pudding to food banks for a tax write-off, and walked away with one point two five million miles!
+
+[Human]
+Lifetime free first class tickets off chocolate pudding!`,
+
+      eiffel: `[Human]
+Claude, how did a con artist manage to sell the actual Eiffel Tower for scrap metal?
+
+[Claude]
+His name was Victor Lustig. And he didn't just sell it once—he sold it twice!
+
+[Human]
+Wait, how do you sell a national monument?!
+
+[Claude]
+In 1925, Paris was struggling with monument maintenance costs. Lustig forged government credentials, invited top scrap dealers to a secret hotel, and told them the city was tearing down the tower.
+
+[Human]
+And someone actually handed him the cash?!
+
+[Claude]
+One dealer paid him seventy thousand dollars in cash plus a massive bribe. Lustig hopped on a train to Vienna with a suitcase of cash and never looked back!`,
+
+      matrix: `[Human]
+Claude, tell me one scientific fact that proves our universe operates like a simulated video game.
+
+[Claude]
+The speed of light is not about light at all. It is the maximum render speed of our reality.
+
+[Human]
+Wait, what do you mean by the render speed?!
+
+[Claude]
+Whenever information moves across space, the universe caps it at exactly three hundred thousand kilometers per second to prevent calculation lag.
+
+[Human]
+Are you telling me we are trapped inside a cosmic graphics processor?
+
+[Claude]
+And when nobody is observing a quantum particle, it does not even render a physical position!`,
+
+      bullet_ant: `[Human]
+Claude, what actually happens to your body if you get stung by a bullet ant?
+
+[Claude]
+Within thirty seconds, you experience the absolute highest score possible on the Schmidt Pain Index: a four-plus.
+
+[Human]
+What does that level of pain even feel like?!
+
+[Claude]
+Victims describe it as walking over hot flaming charcoal with a three-inch rusty nail hammered directly into your heel.
+
+[Human]
+And how long does that agony last?!
+
+[Claude]
+The neurotoxin causes uncontrollable muscle spasms and waves of burning torment that persist for twenty-four uninterrupted hours!`
+    };
+
+    const canvas = document.getElementById('videoCanvas');
+    const ctx = canvas.getContext('2d');
+    const scriptInput = document.getElementById('scriptInput');
+    const statusText = document.getElementById('statusText');
+    const recordingIndicator = document.getElementById('recordingIndicator');
+    const bgmStyleSelect = document.getElementById('bgmStyleSelect');
+    const speechRateSelect = document.getElementById('speechRateSelect');
+
+    let customBrollImage = null;
+    let voices = [];
+    let isPlaying = false;
+    let isRecording = false;
+    let currentLayout = 'split';
+    let currentSpeaker = 'Human';
+    let currentText = '';
+    let currentWords = [];
+    let currentWordIndex = 0;
+    let mediaRecorder = null;
+    let recordedChunks = [];
+    let animFrame = null;
+    let synth = window.speechSynthesis;
+    window.activeUtterance = null; // Prevent Chrome garbage collection bug
+
+    // Web Audio Synthesizer (SFX + BGM)
+    let audioCtx = null;
+    let bgmNode = null;
+
+    function initAudio() {
+      if (!audioCtx) {
+        audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+      }
+      if (audioCtx.state === 'suspended') {
+        audioCtx.resume();
+      }
+    }
+
+    function startBGM() {
+      const style = bgmStyleSelect.value;
+      if (style === 'none') return;
+      initAudio();
+      stopBGM();
+
+      try {
+        if (style === 'drone') {
+          const osc = audioCtx.createOscillator();
+          const filter = audioCtx.createBiquadFilter();
+          const gain = audioCtx.createGain();
+
+          osc.type = 'sawtooth';
+          osc.frequency.setValueAtTime(55, audioCtx.currentTime);
+
+          filter.type = 'lowpass';
+          filter.frequency.setValueAtTime(170, audioCtx.currentTime);
+
+          gain.gain.setValueAtTime(0.05, audioCtx.currentTime);
+
+          osc.connect(filter);
+          filter.connect(gain);
+          gain.connect(audioCtx.destination);
+          osc.start();
+          bgmNode = osc;
+
+        } else if (style === 'lofi') {
+          const osc1 = audioCtx.createOscillator();
+          const osc2 = audioCtx.createOscillator();
+          const gain = audioCtx.createGain();
+
+          osc1.type = 'triangle';
+          osc2.type = 'sine';
+          osc1.frequency.setValueAtTime(130.81, audioCtx.currentTime);
+          osc2.frequency.setValueAtTime(196.00, audioCtx.currentTime);
+
+          gain.gain.setValueAtTime(0.04, audioCtx.currentTime);
+
+          osc1.connect(gain);
+          osc2.connect(gain);
+          gain.connect(audioCtx.destination);
+          osc1.start();
+          osc2.start();
+          bgmNode = { stop: () => { osc1.stop(); osc2.stop(); } };
+
+        } else if (style === 'trap') {
+          const osc = audioCtx.createOscillator();
+          const gain = audioCtx.createGain();
+          osc.type = 'sine';
+          osc.frequency.setValueAtTime(45, audioCtx.currentTime);
+          gain.gain.setValueAtTime(0.06, audioCtx.currentTime);
+
+          osc.connect(gain);
+          gain.connect(audioCtx.destination);
+          osc.start();
+          bgmNode = osc;
+        }
+      } catch (e) {
+        console.warn('Audio BGM error:', e);
+      }
+    }
+
+    function stopBGM() {
+      try {
+        if (bgmNode) {
+          if (typeof bgmNode.stop === 'function') bgmNode.stop();
+          bgmNode = null;
+        }
+      } catch (e) {}
+    }
+
+    function changeBGMStyle() {
+      if (isPlaying) startBGM();
+    }
+
+    function playPopSFX() {
+      initAudio();
+      try {
+        const osc = audioCtx.createOscillator();
+        const gain = audioCtx.createGain();
+        osc.type = 'sine';
+        osc.frequency.setValueAtTime(500, audioCtx.currentTime);
+        osc.frequency.exponentialRampToValueAtTime(950, audioCtx.currentTime + 0.05);
+        gain.gain.setValueAtTime(0.18, audioCtx.currentTime);
+        gain.gain.exponentialRampToValueAtTime(0.001, audioCtx.currentTime + 0.05);
+        osc.connect(gain);
+        gain.connect(audioCtx.destination);
+        osc.start();
+        osc.stop(audioCtx.currentTime + 0.05);
+      } catch (e) {}
+    }
+
+    function playWhooshSFX() {
+      initAudio();
+      try {
+        const osc = audioCtx.createOscillator();
+        const gain = audioCtx.createGain();
+        osc.type = 'triangle';
+        osc.frequency.setValueAtTime(160, audioCtx.currentTime);
+        osc.frequency.exponentialRampToValueAtTime(380, audioCtx.currentTime + 0.12);
+        gain.gain.setValueAtTime(0.22, audioCtx.currentTime);
+        gain.gain.exponentialRampToValueAtTime(0.001, audioCtx.currentTime + 0.14);
+        osc.connect(gain);
+        gain.connect(audioCtx.destination);
+        osc.start();
+        osc.stop(audioCtx.currentTime + 0.14);
+      } catch (e) {}
+    }
+
+    function generateScriptFromTopic() {
+      const topic = document.getElementById('topicInput').value.trim();
+      if (!topic) {
+        alert("Please type a topic first!");
+        return;
+      }
+
+      const generatedScript = `[Human]
+Claude, what is the craziest untold story about ${topic}?
+
+[Claude]
+Most people think it is an urban legend, but official declassified archives tell a terrifyingly real story.
+
+[Human]
+Wait, what actually happened?!
+
+[Claude]
+In the middle of the operation, an unexpected flaw in the protocol was exploited, causing chaos that officials tried to cover up for years.
+
+[Human]
+How did anyone even figure out the loophole?
+
+[Claude]
+By the time authorities stepped in, over tens of millions of dollars had vanished without leaving a single trace!
+
+[Human]
+That might be the smartest maneuver in history!`;
+
+      scriptInput.value = generatedScript;
+      statusText.textContent = `Generated script for "${topic}"! Click Preview Video to watch.`;
+      drawFrame();
+    }
+
+    function handleImageUpload(e) {
+      const file = e.target.files[0];
+      if (file) loadImageFile(file);
+    }
+
+    function loadImageFile(file) {
+      const reader = new FileReader();
+      reader.onload = function(event) {
+        const img = new Image();
+        img.onload = function() {
+          customBrollImage = img;
+          document.getElementById('imageUploadLabel').textContent = `✅ ${file.name.substring(0, 14)}...`;
+          drawFrame();
+        };
+        img.src = event.target.result;
+      };
+      reader.readAsDataURL(file);
+    }
+
+    const dropZone = document.getElementById('dropZone');
+    dropZone.addEventListener('dragover', (e) => { e.preventDefault(); });
+    dropZone.addEventListener('drop', (e) => {
+      e.preventDefault();
+      if (e.dataTransfer.files.length) loadImageFile(e.dataTransfer.files[0]);
+    });
+
+    function populateVoices() {
+      if (!synth) return;
+      voices = synth.getVoices() || [];
+      const humanSelect = document.getElementById('humanVoiceSelect');
+      const claudeSelect = document.getElementById('claudeVoiceSelect');
+      humanSelect.innerHTML = '';
+      claudeSelect.innerHTML = '';
+
+      if (voices.length === 0) {
+        const optDefault = document.createElement('option');
+        optDefault.value = 'default';
+        optDefault.textContent = 'Standard System Voice';
+        humanSelect.appendChild(optDefault);
+        claudeSelect.appendChild(optDefault.cloneNode(true));
+        return;
+      }
+
+      voices.forEach((v, i) => {
+        const opt1 = document.createElement('option');
+        opt1.value = i;
+        opt1.textContent = `${v.name} (${v.lang})`;
+        humanSelect.appendChild(opt1);
+
+        const opt2 = document.createElement('option');
+        opt2.value = i;
+        opt2.textContent = `${v.name} (${v.lang})`;
+        claudeSelect.appendChild(opt2);
+      });
+
+      const enIndices = voices.map((v, i) => v.lang.startsWith('en') ? i : -1).filter(i => i !== -1);
+      if (enIndices.length > 0) {
+        humanSelect.value = enIndices[0];
+        claudeSelect.value = enIndices[Math.min(1, enIndices.length - 1)];
+      }
+    }
+
+    if (window.speechSynthesis) {
+      if (speechSynthesis.onvoiceschanged !== undefined) {
+        speechSynthesis.onvoiceschanged = populateVoices;
+      }
+      populateVoices();
+    }
+
+    function loadTemplate(key) {
+      scriptInput.value = TEMPLATES[key];
+      statusText.textContent = `Loaded "${key}" template!`;
+      drawFrame();
+    }
+    loadTemplate('bank');
+
+    function setLayout(layout) {
+      currentLayout = layout;
+      document.getElementById('layoutSplit').classList.toggle('active', layout === 'split');
+      document.getElementById('layoutStage').classList.toggle('active', layout === 'stage');
+      drawFrame();
+    }
+
+    function parseScript(text) {
+      const turns = [];
+      const lines = text.split('\n');
+      let currentRole = 'Human';
+      let buffer = [];
+
+      for (let line of lines) {
+        const trimmed = line.trim();
+        if (trimmed.toLowerCase().startsWith('[human]')) {
+          if (buffer.length) turns.push({ role: currentRole, text: buffer.join(' ') });
+          currentRole = 'Human';
+          buffer = [trimmed.replace(/\[human\]/i, '').trim()];
+        } else if (trimmed.toLowerCase().startsWith('[claude]')) {
+          if (buffer.length) turns.push({ role: currentRole, text: buffer.join(' ') });
+          currentRole = 'Claude';
+          buffer = [trimmed.replace(/\[claude\]/i, '').trim()];
+        } else if (trimmed) {
+          buffer.push(trimmed);
+        }
+      }
+      if (buffer.length && buffer.join(' ').trim()) {
+        turns.push({ role: currentRole, text: buffer.join(' ').trim() });
+      }
+      return turns;
+    }
+
+    // ==========================================
+    // 3D CHARACTER MODEL RENDERING
+    // ==========================================
+    let time = 0;
+
+    function drawHuman3DModel(x, y, active, t, scale = 1.0) {
+      ctx.save();
+      ctx.translate(x, y);
+      ctx.scale(scale, scale);
+
+      const breathing = Math.sin(t * 2) * 4;
+      const speechBob = active ? Math.sin(t * 8) * 8 : 0;
+      const headTilt = active ? Math.sin(t * 4) * 0.04 : Math.sin(t * 1.5) * 0.02;
+
+      const blinkCycle = (t * 0.8) % 3.0;
+      const isBlinking = blinkCycle > 2.85;
+      const mouthOpen = active ? Math.abs(Math.sin(t * 14)) * 26 + 6 : 4;
+
+      // Torso / Hoodie
+      ctx.save();
+      ctx.translate(0, breathing + speechBob * 0.5);
+
+      const hoodieGrad = ctx.createLinearGradient(-220, 160, 220, 360);
+      hoodieGrad.addColorStop(0, '#1d273b');
+      hoodieGrad.addColorStop(0.5, '#2b3954');
+      hoodieGrad.addColorStop(1, '#151d2d');
+      ctx.fillStyle = hoodieGrad;
+
+      ctx.beginPath();
+      ctx.moveTo(-180, 400);
+      ctx.quadraticCurveTo(-190, 210, -110, 170);
+      ctx.quadraticCurveTo(-50, 150, 0, 175);
+      ctx.quadraticCurveTo(50, 150, 110, 170);
+      ctx.quadraticCurveTo(190, 210, 180, 400);
+      ctx.closePath();
+      ctx.fill();
+
+      if (active) {
+        ctx.strokeStyle = 'rgba(59, 130, 246, 0.7)';
+        ctx.lineWidth = 6;
+        ctx.stroke();
+      }
+
+      ctx.fillStyle = '#1e293b';
+      ctx.beginPath();
+      ctx.ellipse(0, 175, 60, 20, 0, 0, Math.PI * 2);
+      ctx.fill();
+
+      ctx.strokeStyle = '#e2e8f0';
+      ctx.lineWidth = 4;
+      ctx.beginPath();
+      ctx.moveTo(-20, 185); ctx.lineTo(-24, 270);
+      ctx.moveTo(20, 185); ctx.lineTo(24, 270);
+      ctx.stroke();
+      ctx.restore();
+
+      // Head & Neck
+      ctx.save();
+      ctx.translate(0, breathing + speechBob);
+      ctx.rotate(headTilt);
+
+      const neckGrad = ctx.createLinearGradient(-35, 120, 35, 170);
+      neckGrad.addColorStop(0, '#d99768');
+      neckGrad.addColorStop(1, '#ffcba4');
+      ctx.fillStyle = neckGrad;
+      ctx.fillRect(-35, 110, 70, 65);
+
+      const faceGrad = ctx.createRadialGradient(-20, 10, 20, 0, 20, 140);
+      faceGrad.addColorStop(0, '#ffe5cc');
+      faceGrad.addColorStop(0.65, '#f6ba8e');
+      faceGrad.addColorStop(1, '#d88d5e');
+      ctx.fillStyle = faceGrad;
+
+      ctx.beginPath();
+      ctx.moveTo(0, -90);
+      ctx.bezierCurveTo(95, -90, 95, 30, 70, 90);
+      ctx.bezierCurveTo(45, 135, 25, 140, 0, 140);
+      ctx.bezierCurveTo(-25, 140, -45, 135, -70, 90);
+      ctx.bezierCurveTo(-95, 30, -95, -90, 0, -90);
+      ctx.closePath();
+      ctx.fill();
+
+      ctx.fillStyle = '#f6ba8e';
+      ctx.beginPath();
+      ctx.ellipse(-90, 20, 18, 30, 0.1, 0, Math.PI * 2);
+      ctx.ellipse(90, 20, 18, 30, -0.1, 0, Math.PI * 2);
+      ctx.fill();
+
+      ctx.fillStyle = 'rgba(239, 68, 68, 0.14)';
+      ctx.beginPath();
+      ctx.arc(-48, 48, 22, 0, Math.PI * 2);
+      ctx.arc(48, 48, 22, 0, Math.PI * 2);
+      ctx.fill();
+
+      // Eyes
+      const eyeY = 15;
+      const leftEyeX = -38;
+      const rightEyeX = 38;
+
+      if (isBlinking) {
+        ctx.strokeStyle = '#3d2516';
+        ctx.lineWidth = 5;
+        ctx.beginPath();
+        ctx.moveTo(leftEyeX - 18, eyeY); ctx.quadraticCurveTo(leftEyeX, eyeY + 8, leftEyeX + 18, eyeY);
+        ctx.moveTo(rightEyeX - 18, eyeY); ctx.quadraticCurveTo(rightEyeX, eyeY + 8, rightEyeX + 18, eyeY);
+        ctx.stroke();
+      } else {
+        ctx.fillStyle = '#ffffff';
+        ctx.beginPath();
+        ctx.ellipse(leftEyeX, eyeY, 20, 24, 0, 0, Math.PI * 2);
+        ctx.ellipse(rightEyeX, eyeY, 20, 24, 0, 0, Math.PI * 2);
+        ctx.fill();
+
+        ctx.strokeStyle = '#261b14';
+        ctx.lineWidth = 3;
+        ctx.stroke();
+
+        const leftIris = ctx.createRadialGradient(leftEyeX - 2, eyeY - 2, 3, leftEyeX, eyeY, 13);
+        leftIris.addColorStop(0, '#60a5fa');
+        leftIris.addColorStop(0.7, '#1d4ed8');
+        leftIris.addColorStop(1, '#0f172a');
+        ctx.fillStyle = leftIris;
+        ctx.beginPath();
+        ctx.arc(leftEyeX, eyeY, 12, 0, Math.PI * 2);
+        ctx.arc(rightEyeX, eyeY, 12, 0, Math.PI * 2);
+        ctx.fill();
+
+        ctx.fillStyle = '#0a0a0f';
+        ctx.beginPath();
+        ctx.arc(leftEyeX, eyeY, 6, 0, Math.PI * 2);
+        ctx.arc(rightEyeX, eyeY, 6, 0, Math.PI * 2);
+        ctx.fill();
+
+        ctx.fillStyle = '#ffffff';
+        ctx.beginPath();
+        ctx.arc(leftEyeX - 4, eyeY - 5, 4, 0, Math.PI * 2);
+        ctx.arc(rightEyeX - 4, eyeY - 5, 4, 0, Math.PI * 2);
+        ctx.arc(leftEyeX + 3, eyeY + 4, 2, 0, Math.PI * 2);
+        ctx.arc(rightEyeX + 3, eyeY + 4, 2, 0, Math.PI * 2);
+        ctx.fill();
+      }
+
+      const browOffset = active ? Math.sin(t * 6) * 4 : 0;
+      ctx.fillStyle = '#1e1b4b';
+      ctx.beginPath();
+      ctx.roundRect(leftEyeX - 22, eyeY - 28 - browOffset, 44, 10, 5);
+      ctx.roundRect(rightEyeX - 22, eyeY - 28 - browOffset, 44, 10, 5);
+      ctx.fill();
+
+      ctx.strokeStyle = '#d98b5a';
+      ctx.lineWidth = 4;
+      ctx.beginPath();
+      ctx.moveTo(0, 22);
+      ctx.quadraticCurveTo(8, 48, -4, 52);
+      ctx.stroke();
+
+      // Animated Mouth
+      ctx.save();
+      ctx.translate(0, 88);
+      ctx.fillStyle = '#4c0519';
+      ctx.beginPath();
+      ctx.ellipse(0, 0, 24, mouthOpen, 0, 0, Math.PI * 2);
+      ctx.fill();
+
+      if (mouthOpen > 8) {
+        ctx.fillStyle = '#ffffff';
+        ctx.beginPath();
+        ctx.roundRect(-16, -mouthOpen + 2, 32, Math.min(10, mouthOpen * 0.4), 3);
+        ctx.fill();
+
+        ctx.fillStyle = '#fb7185';
+        ctx.beginPath();
+        ctx.ellipse(0, mouthOpen - 4, 14, 8, 0, 0, Math.PI);
+        ctx.fill();
+      }
+
+      ctx.strokeStyle = '#b91c1c';
+      ctx.lineWidth = 3;
+      ctx.beginPath();
+      ctx.ellipse(0, 0, 25, mouthOpen, 0, 0, Math.PI * 2);
+      ctx.stroke();
+      ctx.restore();
+
+      // Hair
+      const hairGrad = ctx.createLinearGradient(-90, -110, 90, 0);
+      hairGrad.addColorStop(0, '#171725');
+      hairGrad.addColorStop(0.5, '#2e2e42');
+      hairGrad.addColorStop(1, '#11111a');
+      ctx.fillStyle = hairGrad;
+
+      ctx.beginPath();
+      ctx.moveTo(-92, -20);
+      ctx.quadraticCurveTo(-95, -120, -30, -125);
+      ctx.quadraticCurveTo(40, -130, 92, -70);
+      ctx.quadraticCurveTo(95, -10, 88, 20);
+      ctx.quadraticCurveTo(60, -30, 30, -20);
+      ctx.quadraticCurveTo(0, -50, -40, -20);
+      ctx.quadraticCurveTo(-75, -40, -92, -20);
+      ctx.closePath();
+      ctx.fill();
+
+      ctx.strokeStyle = 'rgba(255, 255, 255, 0.2)';
+      ctx.lineWidth = 5;
+      ctx.beginPath();
+      ctx.arc(0, -95, 60, Math.PI * 1.1, Math.PI * 1.7);
+      ctx.stroke();
+
+      ctx.restore(); // Head
+      ctx.save();
+      ctx.translate(40, breathing + 220);
+      ctx.fillStyle = '#475569';
+      ctx.roundRect(-18, -40, 36, 60, 14);
+      ctx.fill();
+      ctx.fillStyle = '#0f172a';
+      ctx.roundRect(-14, -36, 28, 30, 8);
+      ctx.fill();
+      ctx.strokeStyle = active ? '#3b82f6' : '#64748b';
+      ctx.lineWidth = 4;
+      ctx.strokeRect(-18, -4, 36, 6);
+      ctx.restore();
+
+      ctx.restore();
+    }
+
+    function drawClaude3DModel(x, y, active, t, scale = 1.0) {
+      ctx.save();
+      ctx.translate(x, y);
+      ctx.scale(scale, scale);
+
+      const hover = Math.sin(t * 3) * 10;
+      const pulse = active ? Math.sin(t * 10) * 8 : Math.sin(t * 2) * 2;
+      const visorScan = (Math.sin(t * 5) + 1) * 0.5;
+
+      ctx.translate(0, hover);
+
+      // Chassis
+      const chassisGrad = ctx.createLinearGradient(-200, 160, 200, 360);
+      chassisGrad.addColorStop(0, '#131824');
+      chassisGrad.addColorStop(0.5, '#221912');
+      chassisGrad.addColorStop(1, '#0b0e17');
+      ctx.fillStyle = chassisGrad;
+
+      ctx.beginPath();
+      ctx.moveTo(-180, 400);
+      ctx.quadraticCurveTo(-190, 200, -110, 160);
+      ctx.quadraticCurveTo(-50, 140, 0, 160);
+      ctx.quadraticCurveTo(50, 140, 110, 160);
+      ctx.quadraticCurveTo(190, 200, 180, 400);
+      ctx.closePath();
+      ctx.fill();
+
+      ctx.strokeStyle = active ? '#d97706' : '#475569';
+      ctx.lineWidth = 5;
+      if (active) {
+        ctx.shadowColor = 'rgba(217, 119, 6, 0.9)';
+        ctx.shadowBlur = 30;
+      }
+      ctx.beginPath();
+      ctx.moveTo(-110, 175); ctx.lineTo(-40, 260); ctx.lineTo(-40, 360);
+      ctx.moveTo(110, 175);  ctx.lineTo(40, 260);  ctx.lineTo(40, 360);
+      ctx.stroke();
+
+      // Spark Reactor Core
+      ctx.save();
+      ctx.translate(0, 260);
+      const coreR = 36 + (active ? pulse * 0.8 : 0);
+      const coreGrad = ctx.createRadialGradient(0, 0, 5, 0, 0, coreR);
+      coreGrad.addColorStop(0, '#fef3c7');
+      coreGrad.addColorStop(0.4, '#f59e0b');
+      coreGrad.addColorStop(1, '#b45309');
+      ctx.fillStyle = coreGrad;
+
+      ctx.beginPath();
+      for (let i = 0; i < 8; i++) {
+        const angle = (i * Math.PI) / 4 + (active ? t * 2 : 0);
+        const r1 = coreR;
+        const r2 = coreR * 0.45;
+        const x1 = Math.cos(angle) * r1;
+        const y1 = Math.sin(angle) * r1;
+        const x2 = Math.cos(angle + Math.PI / 8) * r2;
+        const y2 = Math.sin(angle + Math.PI / 8) * r2;
+        if (i === 0) ctx.moveTo(x1, y1);
+        else ctx.lineTo(x1, y1);
+        ctx.lineTo(x2, y2);
+      }
+      ctx.closePath();
+      ctx.fill();
+      ctx.restore();
+
+      // Cybernetic Head
+      ctx.save();
+      ctx.translate(0, -10);
+
+      const headGrad = ctx.createRadialGradient(-30, 0, 30, 0, 20, 130);
+      headGrad.addColorStop(0, '#2d3748');
+      headGrad.addColorStop(0.7, '#1a202c');
+      headGrad.addColorStop(1, '#0d1117');
+      ctx.fillStyle = headGrad;
+
+      ctx.beginPath();
+      ctx.moveTo(0, -95);
+      ctx.bezierCurveTo(90, -95, 95, 20, 75, 80);
+      ctx.bezierCurveTo(50, 135, 25, 140, 0, 140);
+      ctx.bezierCurveTo(-25, 140, -50, 135, -75, 80);
+      ctx.bezierCurveTo(-95, 20, -90, -95, 0, -95);
+      ctx.closePath();
+      ctx.fill();
+
+      ctx.strokeStyle = active ? '#d97706' : '#334155';
+      ctx.lineWidth = 4;
+      ctx.stroke();
+
+      ctx.fillStyle = '#0f172a';
+      ctx.beginPath();
+      ctx.roundRect(-98, -10, 20, 50, 8);
+      ctx.roundRect(78, -10, 20, 50, 8);
+      ctx.fill();
+
+      ctx.strokeStyle = active ? '#f59e0b' : '#475569';
+      ctx.lineWidth = 3;
+      ctx.strokeRect(-98, 8, 20, 14);
+      ctx.strokeRect(78, 8, 20, 14);
+
+      // Visor
+      const visorY = 15;
+      const visorGrad = ctx.createLinearGradient(-75, visorY - 30, 75, visorY + 30);
+      visorGrad.addColorStop(0, '#0f172a');
+      visorGrad.addColorStop(0.5, '#1e293b');
+      visorGrad.addColorStop(1, '#020617');
+      ctx.fillStyle = visorGrad;
+
+      ctx.beginPath();
+      ctx.roundRect(-75, visorY - 26, 150, 54, 18);
+      ctx.fill();
+      ctx.strokeStyle = active ? '#d97706' : '#334155';
+      ctx.lineWidth = 4;
+      ctx.stroke();
+
+      const leftSensX = -35;
+      const rightSensX = 35;
+      ctx.fillStyle = active ? '#fbbf24' : '#64748b';
+      ctx.shadowColor = active ? 'rgba(251, 191, 36, 0.9)' : 'transparent';
+      ctx.shadowBlur = active ? 25 : 0;
+
+      ctx.lineWidth = 4;
+      ctx.strokeStyle = active ? '#f59e0b' : '#475569';
+      ctx.beginPath();
+      ctx.arc(leftSensX, visorY, 14, 0, Math.PI * 2);
+      ctx.arc(rightSensX, visorY, 14, 0, Math.PI * 2);
+      ctx.stroke();
+
+      ctx.beginPath();
+      ctx.arc(leftSensX, visorY, 6, 0, Math.PI * 2);
+      ctx.arc(rightSensX, visorY, 6, 0, Math.PI * 2);
+      ctx.fill();
+
+      if (active) {
+        ctx.strokeStyle = 'rgba(255, 255, 255, 0.5)';
+        ctx.lineWidth = 2;
+        ctx.beginPath();
+        const scanY = visorY - 20 + visorScan * 40;
+        ctx.moveTo(-70, scanY);
+        ctx.lineTo(70, scanY);
+        ctx.stroke();
+      }
+
+      // Audio Frequency Mouth
+      ctx.save();
+      ctx.translate(0, 92);
+      const mouthBars = 9;
+      const mWidth = 54;
+      const mStep = mWidth / mouthBars;
+
+      for (let i = 0; i < mouthBars; i++) {
+        const barX = -mWidth / 2 + i * mStep;
+        const wave = active ? Math.abs(Math.sin(t * 12 + i * 0.8)) * 26 + 6 : 4;
+        ctx.fillStyle = active ? '#f59e0b' : '#475569';
+        ctx.shadowColor = active ? 'rgba(245, 158, 11, 0.9)' : 'transparent';
+        ctx.shadowBlur = active ? 16 : 0;
+        ctx.roundRect(barX, -wave / 2, mStep * 0.65, wave, 3);
+        ctx.fill();
+      }
+      ctx.restore();
+
+      ctx.fillStyle = active ? '#d97706' : '#475569';
+      ctx.font = '800 16px "Montserrat", sans-serif';
+      ctx.textAlign = 'center';
+      ctx.fillText("CLAUDE 3.7", 0, -50);
+
+      ctx.restore();
+      ctx.restore();
+    }
+
+    // Main Draw Frame
+    function drawFrame() {
+      time += 0.035;
+      const W = canvas.width;
+      const H = canvas.height;
+
+      const bg = ctx.createRadialGradient(W / 2, H / 2, 200, W / 2, H / 2, H);
+      bg.addColorStop(0, '#0f1422');
+      bg.addColorStop(1, '#040609');
+      ctx.fillStyle = bg;
+      ctx.fillRect(0, 0, W, H);
+
+      ctx.strokeStyle = 'rgba(255, 255, 255, 0.025)';
+      ctx.lineWidth = 2;
+      for (let x = 0; x < W; x += 120) {
+        ctx.beginPath();
+        ctx.moveTo(x, 0); ctx.lineTo(x, H); ctx.stroke();
+      }
+      for (let y = 0; y < H; y += 120) {
+        ctx.beginPath();
+        ctx.moveTo(0, y); ctx.lineTo(W, y); ctx.stroke();
+      }
+
+      const isHumanSpeaking = currentSpeaker === 'Human';
+      const isClaudeSpeaking = currentSpeaker === 'Claude';
+
+      if (currentLayout === 'split') {
+        // --- TOP: HUMAN ---
+        ctx.save();
+        ctx.beginPath();
+        ctx.roundRect(30, 30, W - 60, H / 2 - 45, 36);
+        ctx.clip();
+        
+        const humanBg = ctx.createLinearGradient(0, 0, 0, H / 2);
+        humanBg.addColorStop(0, '#0c1426');
+        humanBg.addColorStop(1, '#060a14');
+        ctx.fillStyle = humanBg;
+        ctx.fillRect(0, 0, W, H / 2);
+
+        ctx.strokeStyle = 'rgba(59, 130, 246, 0.08)';
+        ctx.lineWidth = 4;
+        for (let hx = 100; hx < W; hx += 180) {
+          ctx.strokeRect(hx, 60, 120, 120);
+        }
+
+        drawHuman3DModel(W / 2, 490, isHumanSpeaking, time, 1.65);
+        ctx.restore();
+
+        ctx.save();
+        ctx.roundRect(30, 30, W - 60, H / 2 - 45, 36);
+        ctx.strokeStyle = isHumanSpeaking ? '#3b82f6' : '#1e293b';
+        ctx.lineWidth = isHumanSpeaking ? 8 : 3;
+        if (isHumanSpeaking) {
+          ctx.shadowColor = 'rgba(59, 130, 246, 0.8)';
+          ctx.shadowBlur = 35;
+        }
+        ctx.stroke();
+
+        ctx.fillStyle = isHumanSpeaking ? '#3b82f6' : '#1e293b';
+        ctx.roundRect(W / 2 - 90, 50, 180, 44, 12);
+        ctx.fill();
+        ctx.fillStyle = '#ffffff';
+        ctx.font = '900 24px "Montserrat", sans-serif';
+        ctx.textAlign = 'center';
+        ctx.fillText("HUMAN", W / 2, 80);
+        ctx.restore();
+
+        // --- BOTTOM: CLAUDE ---
+        ctx.save();
+        ctx.beginPath();
+        ctx.roundRect(30, H / 2 + 15, W - 60, H / 2 - 45, 36);
+        ctx.clip();
+
+        const claudeBg = ctx.createLinearGradient(0, H / 2, 0, H);
+        claudeBg.addColorStop(0, '#1c130b');
+        claudeBg.addColorStop(1, '#070503');
+        ctx.fillStyle = claudeBg;
+        ctx.fillRect(0, H / 2, W, H / 2);
+
+        ctx.strokeStyle = 'rgba(217, 119, 6, 0.08)';
+        ctx.lineWidth = 3;
+        for (let cx = 80; cx < W; cx += 160) {
+          ctx.beginPath();
+          ctx.moveTo(cx, H / 2);
+          ctx.lineTo(cx, H);
+          ctx.stroke();
+        }
+
+        drawClaude3DModel(W / 2, H / 2 + 500, isClaudeSpeaking, time, 1.65);
+        ctx.restore();
+
+        ctx.save();
+        ctx.roundRect(30, H / 2 + 15, W - 60, H / 2 - 45, 36);
+        ctx.strokeStyle = isClaudeSpeaking ? '#d97706' : '#1e293b';
+        ctx.lineWidth = isClaudeSpeaking ? 8 : 3;
+        if (isClaudeSpeaking) {
+          ctx.shadowColor = 'rgba(217, 119, 6, 0.8)';
+          ctx.shadowBlur = 35;
+        }
+        ctx.stroke();
+
+        ctx.fillStyle = isClaudeSpeaking ? '#d97706' : '#1e293b';
+        ctx.roundRect(W / 2 - 110, H / 2 + 35, 220, 44, 12);
+        ctx.fill();
+        ctx.fillStyle = '#ffffff';
+        ctx.font = '900 24px "Montserrat", sans-serif';
+        ctx.textAlign = 'center';
+        ctx.fillText("CLAUDE 3.7", W / 2, H / 2 + 66);
+        ctx.restore();
+
+        ctx.strokeStyle = '#27324a';
+        ctx.lineWidth = 6;
+        ctx.beginPath();
+        ctx.moveTo(30, H / 2);
+        ctx.lineTo(W - 30, H / 2);
+        ctx.stroke();
+
+        const capY = isHumanSpeaking ? 800 : 1770;
+        drawViralCaptions(W / 2, capY);
+
+      } else {
+        // --- STAGE LAYOUT ---
+        ctx.save();
+        ctx.fillStyle = 'rgba(15, 20, 32, 0.9)';
+        ctx.strokeStyle = 'rgba(255, 255, 255, 0.12)';
+        ctx.lineWidth = 3;
+        ctx.roundRect(80, 80, W - 160, 120, 24);
+        ctx.fill();
+        ctx.stroke();
+
+        ctx.font = '900 46px "Montserrat", sans-serif';
+        ctx.textAlign = 'center';
+        ctx.fillStyle = '#f8fafc';
+        ctx.fillText("HUMAN  ×  CLAUDE", W / 2, 155);
+        ctx.restore();
+
+        drawHuman3DModel(W / 2 - 250, 700, isHumanSpeaking, time, 1.25);
+        drawClaude3DModel(W / 2 + 250, 700, isClaudeSpeaking, time, 1.25);
+        drawVisualStoryCard(W / 2, 1220, currentSpeaker, time);
+        drawViralCaptions(W / 2, 1680);
+      }
+
+      if (isPlaying || isRecording) {
+        animFrame = requestAnimationFrame(drawFrame);
+      }
+    }
+
+    function drawVisualStoryCard(cx, cy, speaker, t) {
+      ctx.save();
+      ctx.translate(cx, cy);
+
+      ctx.fillStyle = 'rgba(17, 24, 39, 0.92)';
+      ctx.strokeStyle = speaker === 'Human' ? 'rgba(59, 130, 246, 0.4)' : 'rgba(217, 119, 6, 0.4)';
+      ctx.lineWidth = 4;
+      ctx.roundRect(-420, -170, 840, 340, 30);
+      ctx.fill();
+      ctx.stroke();
+
+      if (customBrollImage) {
+        ctx.save();
+        ctx.beginPath();
+        ctx.roundRect(-400, -150, 800, 300, 20);
+        ctx.clip();
+        ctx.drawImage(customBrollImage, -400, -150, 800, 300);
+        ctx.restore();
+      } else {
+        ctx.fillStyle = '#ffffff';
+        ctx.font = '900 34px "Montserrat", sans-serif';
+        ctx.textAlign = 'center';
+        
+        if (speaker === 'Human') {
+          ctx.fillText("🤔 INVESTIGATING THE GLITCH", 0, -60);
+          ctx.font = '700 24px "JetBrains Mono", monospace';
+          ctx.fillStyle = '#93c5fd';
+          ctx.fillText("Interrogating archival records...", 0, 35);
+        } else {
+          ctx.fillText("⚡ REVEALING CLASSIFIED DATA", 0, -60);
+          ctx.font = '700 24px "JetBrains Mono", monospace';
+          ctx.fillStyle = '#fde68a';
+          ctx.fillText("Displaying verified proof...", 0, 35);
+        }
+      }
+      ctx.restore();
+    }
+
+    function drawViralCaptions(cx, cy) {
+      if (!currentWords.length) return;
+
+      ctx.save();
+      ctx.translate(cx, cy);
+
+      const start = Math.max(0, currentWordIndex - 1);
+      const end = Math.min(currentWords.length, start + 4);
+      const chunk = currentWords.slice(start, end);
+
+      ctx.fillStyle = 'rgba(0, 0, 0, 0.9)';
+      ctx.roundRect(-460, -90, 920, 180, 28);
+      ctx.fill();
+      ctx.strokeStyle = 'rgba(255, 255, 255, 0.15)';
+      ctx.lineWidth = 3;
+      ctx.stroke();
+
+      ctx.font = '900 62px "Montserrat", sans-serif';
+      ctx.textAlign = 'center';
+      ctx.textBaseline = 'middle';
+
+      let totalWidth = 0;
+      const measurements = chunk.map(w => {
+        const m = ctx.measureText(w.text + " ");
+        totalWidth += m.width;
+        return { text: w.text, width: m.width, isCurrent: w.index === currentWordIndex };
+      });
+
+      let curX = -totalWidth / 2;
+      measurements.forEach(m => {
+        ctx.save();
+        if (m.isCurrent) {
+          ctx.fillStyle = '#facc15';
+          ctx.strokeStyle = '#000';
+          ctx.lineWidth = 9;
+          ctx.strokeText(m.text, curX + m.width / 2, 0);
+          ctx.shadowColor = 'rgba(250, 204, 21, 0.95)';
+          ctx.shadowBlur = 28;
+          ctx.fillText(m.text, curX + m.width / 2, 0);
+        } else {
+          ctx.fillStyle = '#ffffff';
+          ctx.strokeStyle = '#000';
+          ctx.lineWidth = 6;
+          ctx.strokeText(m.text, curX + m.width / 2, 0);
+          ctx.shadowBlur = 0;
+          ctx.fillText(m.text, curX + m.width / 2, 0);
+        }
+        ctx.restore();
+        curX += m.width;
+      });
+
+      ctx.restore();
+    }
+
+    // ==========================================
+    // BULLETPROOF WORD-TIMER PLAYBACK ENGINE
+    // Works reliably across ALL browsers & file://
+    // ==========================================
+    async function playTurn(turn, turnIdx, totalTurns) {
+      return new Promise((resolve) => {
+        currentSpeaker = turn.role;
+        currentText = turn.text;
+        statusText.textContent = `▶️ Turn ${turnIdx}/${totalTurns} (${turn.role}): "${turn.text.substring(0, 36)}..."`;
+        playWhooshSFX();
+
+        const rawWords = turn.text.split(/\s+/).filter(w => w.length > 0);
+        currentWords = rawWords.map((w, idx) => ({ text: w, index: idx }));
+        currentWordIndex = 0;
+
+        const speed = parseFloat(speechRateSelect.value) || 1.15;
+        // Average speaking rate: ~230 ms per word at 1.0x
+        const msPerWord = Math.max(160, Math.floor(240 / speed));
+        const totalEstimatedDuration = rawWords.length * msPerWord + 300;
+
+        // Word advancement timer (Guarantees captions advance even without browser onboundary support)
+        let wordTick = 0;
+        const wordTimer = setInterval(() => {
+          if (!isPlaying) {
+            clearInterval(wordTimer);
+            return;
+          }
+          wordTick++;
+          if (wordTick < rawWords.length) {
+            currentWordIndex = wordTick;
+            playPopSFX();
+          } else {
+            clearInterval(wordTimer);
+          }
+        }, msPerWord);
+
+        let turnResolved = false;
+        function finishTurn() {
+          if (turnResolved) return;
+          turnResolved = true;
+          clearInterval(wordTimer);
+          setTimeout(resolve, 320);
+        }
+
+        // Safety fallback timer: prevents turn from hanging under any browser condition
+        const safetyTimeout = setTimeout(() => {
+          finishTurn();
+        }, totalEstimatedDuration + 600);
+
+        // Attempt Web Speech Synthesis
+        if (window.speechSynthesis) {
+          try {
+            synth.cancel();
+            synth.resume();
+
+            const utterance = new SpeechSynthesisUtterance(turn.text);
+            window.activeUtterance = utterance; // Keep global reference
+
+            const humanVoiceIdx = document.getElementById('humanVoiceSelect').value;
+            const claudeVoiceIdx = document.getElementById('claudeVoiceSelect').value;
+
+            if (voices && voices.length > 0) {
+              if (turn.role === 'Human' && voices[humanVoiceIdx]) {
+                utterance.voice = voices[humanVoiceIdx];
+              } else if (turn.role === 'Claude' && voices[claudeVoiceIdx]) {
+                utterance.voice = voices[claudeVoiceIdx];
+              }
+            }
+
+            if (turn.role === 'Human') {
+              utterance.pitch = 1.08;
+              utterance.rate = speed;
+            } else {
+              utterance.pitch = 0.92;
+              utterance.rate = speed * 0.98;
+            }
+
+            utterance.onend = () => {
+              clearTimeout(safetyTimeout);
+              finishTurn();
+            };
+
+            utterance.onerror = () => {
+              clearTimeout(safetyTimeout);
+              finishTurn();
+            };
+
+            synth.speak(utterance);
+          } catch (e) {
+            console.warn('Speech synthesis error, falling back to timer:', e);
+          }
+        }
+      });
+    }
+
+    async function runScript() {
+      initAudio();
+      const turns = parseScript(scriptInput.value);
+      if (!turns.length) {
+        alert("Please enter a dialogue script first.");
+        return;
+      }
+
+      isPlaying = true;
+      document.getElementById('previewBtn').innerHTML = '<span>⏸️</span> Stop';
+      statusText.textContent = "🎬 Playing 3D animation preview...";
+      startBGM();
+      drawFrame();
+
+      let idx = 1;
+      for (let turn of turns) {
+        if (!isPlaying) break;
+        await playTurn(turn, idx, turns.length);
+        idx++;
+      }
+
+      stopPlayback();
+    }
+
+    function stopPlayback() {
+      isPlaying = false;
+      if (synth) synth.cancel();
+      stopBGM();
+      document.getElementById('previewBtn').innerHTML = '<span>▶️</span> Preview Video';
+      statusText.textContent = "🟢 Playback stopped. Ready to play or export.";
+      cancelAnimationFrame(animFrame);
+      drawFrame();
+    }
+
+    function togglePlay() {
+      if (isPlaying) {
+        stopPlayback();
+      } else {
+        runScript();
+      }
+    }
+
+    async function startExport() {
+      if (isRecording) return;
+      initAudio();
+      isRecording = true;
+      recordingIndicator.style.display = 'block';
+      statusText.textContent = "🔴 Recording HD 60fps 1080×1920 video with 3D models...";
+      document.getElementById('recordBtn').disabled = true;
+
+      recordedChunks = [];
+      const stream = canvas.captureStream(60);
+
+      const options = { mimeType: 'video/webm;codecs=vp9' };
+      try {
+        mediaRecorder = new MediaRecorder(stream, options);
+      } catch (e) {
+        mediaRecorder = new MediaRecorder(stream);
+      }
+
+      mediaRecorder.ondataavailable = (e) => {
+        if (e.data.size > 0) recordedChunks.push(e.data);
+      };
+
+      mediaRecorder.onstop = () => {
+        const blob = new Blob(recordedChunks, { type: 'video/webm' });
+        const url = URL.createObjectURL(blob);
+        const a = document.createElement('a');
+        a.href = url;
+        a.download = `claude_3d_viral_reel_${Date.now()}.webm`;
+        a.click();
+
+        recordingIndicator.style.display = 'none';
+        isRecording = false;
+        document.getElementById('recordBtn').disabled = false;
+        statusText.textContent = "✅ Export complete! Video downloaded to your computer.";
+      };
+
+      mediaRecorder.start();
+      await runScript();
+
+      if (mediaRecorder && mediaRecorder.state !== 'inactive') {
+        mediaRecorder.stop();
+      }
+    }
+
+    // Initial render
+    drawFrame();
+  </script>
+</body>
+</html>

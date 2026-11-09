@@ -1,0 +1,14 @@
+# Local Windows path wrappers
+powershell.bat
+python.bat
+pip.bat
+git.bat
+
+# Node & Python caches
+node_modules/
+__pycache__/
+*.pyc
+
+# OS generated files
+.DS_Store
+Thumbs.db
